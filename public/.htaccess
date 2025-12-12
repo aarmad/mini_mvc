@@ -1,4 +1,8 @@
 RewriteEngine On
+
+# Set the base directory to /mini_mvc/public/
+RewriteBase /mini_mvc/public/
+
 # Rediriger toutes les requêtes vers index.php (sauf fichiers existants)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

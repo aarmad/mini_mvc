@@ -7,20 +7,57 @@ namespace Mini\Controllers;
 // Importe la classe de base Controller du noyau
 use Mini\Core\Controller;
 use Mini\Models\User;
+use Mini\Models\Product;
+use Mini\Models\Category;
 
 // Déclare la classe finale HomeController qui hérite de Controller
 final class HomeController extends Controller
 {
     // Déclare la méthode d'action par défaut qui ne retourne rien
-    public function index(): void
+    public function index()
     {
-        // Appelle le moteur de rendu avec la vue et ses paramètres
-        $this->render('home/index', params: [
-            // Définit le titre transmis à la vue
-            'title' => 'Mini MVC',
-            'prenom' => 'Toto',
-            'prenom2' => 'Tata',
-            'test' => '123'
+        // Récupère les produits
+        try {
+            $products = Product::getAll();
+            
+            // DEBUG
+            error_log("HomeController: Produits trouvés: " . count($products));
+            
+            // Passe les produits à la vue
+            $this->render('home/index', [
+                'products' => $products
+            ]);
+            
+        } catch (\Exception $e) {
+            error_log("Erreur HomeController: " . $e->getMessage());
+            // En cas d'erreur, passez un tableau vide
+            $this->render('home/index', [
+                'products' => []
+            ]);
+        }
+    }
+
+    public function catalogue()
+    {
+        // Récupère tous les produits
+        $products = Product::getAll();
+        $categories = Category::getAll();
+        
+        // Gestion de la pagination
+        $itemsPerPage = 9;
+        $currentPage = $_GET['page'] ?? 1;
+        $totalProducts = count($products);
+        $totalPages = ceil($totalProducts / $itemsPerPage);
+        
+        // Pagination des produits
+        $startIndex = ($currentPage - 1) * $itemsPerPage;
+        $paginatedProducts = array_slice($products, $startIndex, $itemsPerPage);
+        
+        $this->render('home/catalogue', [
+            'products' => $paginatedProducts,
+            'categories' => $categories,
+            'currentPage' => $currentPage,
+            'totalPages' => $totalPages
         ]);
     }
 

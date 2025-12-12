@@ -1,100 +1,157 @@
-<!doctype html>
-<!-- Définit la langue du document -->
+<!DOCTYPE html>
 <html lang="fr">
-<!-- En-tête du document HTML -->
 <head>
-    <!-- Déclare l'encodage des caractères -->
-    <meta charset="utf-8">
-    <!-- Configure le viewport pour les appareils mobiles -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Définit le titre de la page avec échappement -->
-    <title><?= isset($title) ? htmlspecialchars($title) : 'App' ?></title>
-</head>
-<!-- Corps du document -->
-<body>
-<?php
-// Détermine la page active pour la navigation
-$currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
-$isHome = ($currentPath === '/');
-$isProducts = ($currentPath === '/products');
-$isProductsCreate = ($currentPath === '/products/create');
-$isUsersCreate = ($currentPath === '/users/create');
-?>
-<!-- En-tête de la page -->
-<header style="background-color: #343a40; color: white; padding: 15px 0; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
-        <!-- Logo/Titre -->
-        <h1 style="margin: 0; font-size: 24px;">
-            <a href="/" style="color: white; text-decoration: none;">Mini MVC</a>
-        </h1>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= $title ?? 'Boutique Chocolat' ?></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         
-        <!-- Navigation -->
-        <nav>
-            <ul style="list-style: none; margin: 0; padding: 0; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <li>
-                    <a href="/" 
-                       style="color: <?= $isHome ? '#ffc107' : 'white' ?>; 
-                              text-decoration: none; 
-                              padding: 8px 15px; 
-                              border-radius: 4px;
-                              display: inline-block;
-                              transition: background-color 0.3s;"
-                       onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                       onmouseout="this.style.backgroundColor='transparent'">
-                        🏠 Accueil
-                    </a>
-                </li>
-                <li>
-                    <a href="/products" 
-                       style="color: <?= $isProducts ? '#ffc107' : 'white' ?>; 
-                              text-decoration: none; 
-                              padding: 8px 15px; 
-                              border-radius: 4px;
-                              display: inline-block;
-                              transition: background-color 0.3s;"
-                       onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                       onmouseout="this.style.backgroundColor='transparent'">
-                        📦 Produits
-                    </a>
-                </li>
-                <li>
-                    <a href="/products/create" 
-                       style="color: <?= $isProductsCreate ? '#ffc107' : 'white' ?>; 
-                              text-decoration: none; 
-                              padding: 8px 15px; 
-                              border-radius: 4px;
-                              display: inline-block;
-                              transition: background-color 0.3s;"
-                       onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                       onmouseout="this.style.backgroundColor='transparent'">
-                        ➕ Ajouter un produit
-                    </a>
-                </li>
-                <li>
-                    <a href="/users/create" 
-                       style="color: <?= $isUsersCreate ? '#ffc107' : 'white' ?>; 
-                              text-decoration: none; 
-                              padding: 8px 15px; 
-                              border-radius: 4px;
-                              display: inline-block;
-                              transition: background-color 0.3s;"
-                       onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                       onmouseout="this.style.backgroundColor='transparent'">
-                        👤 Ajouter un utilisateur
-                    </a>
-                </li>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #000;
+            background-color: #fff;
+        }
+        
+        .header {
+            background: #fff;
+            border-bottom: 2px solid #000;
+            padding: 1rem 0;
+        }
+        
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #000;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: #000;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+        
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            min-height: 70vh;
+        }
+        
+        .footer {
+            background: #fff;
+            border-top: 2px solid #000;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            text-align: center;
+            color: #000;
+        }
+        
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #000;
+            background: #f8f9fa;
+        }
+        
+        .alert-success {
+            border-color: #000;
+            background: #f8f9fa;
+        }
+        
+        .alert-error {
+            border-color: #000;
+            background: #f8f9fa;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: #fff;
+            color: #000;
+            border: 1px solid #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background: #000;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="/" class="logo">CHOCOLATERIE</a>
+            <ul class="nav-links">
+                <li><a href="/">Accueil</a></li>
+                <li><a href="/catalogue">Catalogue</a></li>
+                <?php if (isset($_SESSION['user'])): ?>
+                    <li><a href="/dashboard">Mon Compte</a></li>
+                    <li><a href="/cart">Panier</a></li>
+                    <li><a href="/logout">Déconnexion</a></li>
+                <?php else: ?>
+                    <li><a href="/login">Connexion</a></li>
+                    <li><a href="/register">Inscription</a></li>
+                <?php endif; ?>
             </ul>
         </nav>
-    </div>
-</header>
-<!-- Zone de contenu principal -->
-<main>
-    <!-- Insère le contenu rendu de la vue -->
-    <?= $content ?>
-    
-</main>
-<!-- Fin du corps de la page -->
-</body>
-<!-- Fin du document HTML -->
-</html>
+    </header>
 
+    <main class="main">
+        <?php if (isset($_SESSION['success'])): ?>
+            <div class="alert alert-success">
+                <?= $_SESSION['success'] ?>
+                <?php unset($_SESSION['success']); ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="alert alert-error">
+                <?= $_SESSION['error'] ?>
+                <?php unset($_SESSION['error']); ?>
+            </div>
+        <?php endif; ?>
+
+        <?= $content ?>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 Chocolaterie. Tous droits réservés.</p>
+        </div>
+    </footer>
+</body>
+</html>
