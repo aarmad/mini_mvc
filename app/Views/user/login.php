@@ -19,7 +19,7 @@ ob_start();
         </div>
     <?php endif; ?>
     
-    <form method="POST" action="/mini_mvc/public/user/login" style="display: flex; flex-direction: column; gap: 1rem;">
+    <form method="POST" action="/login" style="display: flex; flex-direction: column; gap: 1rem;">
         <div>
             <label for="email" style="display: block; margin-bottom: 0.5rem;">Email:</label>
             <input type="email" id="email" name="email" required 
@@ -37,6 +37,6 @@ ob_start();
     </form>
     
     <p style="text-align: center; margin-top: 1rem;">
-        Pas de compte ? <a href="/mini_mvc/public/user/register" style="color: #000; text-decoration: underline;">S'inscrire</a>
+        Pas de compte ? <a href="/register" style="color: #000; text-decoration: underline;">S'inscrire</a>
     </p>
 </div>

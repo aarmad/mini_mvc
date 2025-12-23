@@ -11,6 +11,47 @@ use Mini\Models\Product;
 // Déclare la classe finale ProductController qui hérite de Controller
 final class ProductController extends Controller
 {
+    /**
+     * Affiche les détails d'un produit
+     * Utilise le paramètre GET 'id'
+     */
+    public function show()
+    {
+        // Récupère l'ID depuis GET
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        
+        if ($id <= 0) {
+            $_SESSION['error'] = "Produit non spécifié";
+            header('Location: /catalogue');
+            exit;
+        }
+        
+        $product = Product::findById($id);
+        
+        if (!$product) {
+            $_SESSION['error'] = "Produit non trouvé";
+            header('Location: /catalogue');
+            exit;
+        }
+        
+        // Récupère quelques produits similaires (autres produits)
+        $allProducts = Product::getAll();
+        $relatedProducts = [];
+        $count = 0;
+        
+        foreach ($allProducts as $p) {
+            if ($p->getId() != $id && $count < 3) {
+                $relatedProducts[] = $p;
+                $count++;
+            }
+        }
+        
+        $this->render('product/show', [
+            'product' => $product,
+            'relatedProducts' => $relatedProducts
+        ]);
+    }
+/*
     public function listProducts(): void
     {
         // Récupère tous les produits
@@ -111,5 +152,60 @@ final class ProductController extends Controller
             ]);
         }
     }
+
+     /**
+     * Affiche les détails d'un produit
+     * @param int $id ID du produit
+    public function show($id)
+    {
+        $product = Product::findById($id);
+        
+        if (!$product) {
+            $_SESSION['error'] = "Produit non trouvé";
+            header('Location: /catalogue');
+            exit;
+        }
+        
+        // Pourrait récupérer des produits similaires
+        $relatedProducts = $this->getRelatedProducts($product);
+        
+        $this->render('product/show', [
+            'product' => $product,
+            'relatedProducts' => $relatedProducts
+        ]);
+    }
+    
+    /**
+     * Récupère des produits similaires
+     * @param Product $product
+     * @return array
+    private function getRelatedProducts($product)
+    {
+        // Pour l'instant, retourne d'autres produits de la même catégorie
+        // ou les derniers produits si pas de catégorie
+        try {
+            if ($product->getCategoryId()) {
+                return Product::getByCategory($product->getCategoryId());
+            }
+            
+            // Sinon, retourne les derniers produits (sauf celui-ci)
+            $allProducts = Product::getAll();
+            $related = [];
+            $count = 0;
+            
+            foreach ($allProducts as $p) {
+                if ($p->getId() != $product->getId() && $count < 3) {
+                    $related[] = $p;
+                    $count++;
+                }
+            }
+            
+            return $related;
+            
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+    */
 }
 

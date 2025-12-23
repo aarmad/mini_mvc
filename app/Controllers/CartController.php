@@ -45,6 +45,13 @@ class CartController extends Controller
     
     public function add()
     {
+        // Vérifier l'authentification
+        if (!isset($_SESSION['user'])) {
+            $_SESSION['error'] = "Vous devez être connecté pour ajouter au panier";
+            header('Location: /login');
+            exit;
+        }
+        
         if (!isset($_POST['product_id'])) {
             $_SESSION['error'] = "Produit non spécifié";
             header('Location: /');
@@ -60,10 +67,12 @@ class CartController extends Controller
             exit;
         }
         
+        // Initialiser le panier si nécessaire
         if (!isset($_SESSION['cart'])) {
             $_SESSION['cart'] = [];
         }
         
+        // Ajouter ou incrémenter la quantité
         $currentQuantity = $_SESSION['cart'][$productId] ?? 0;
         $_SESSION['cart'][$productId] = $currentQuantity + 1;
         
@@ -72,10 +81,25 @@ class CartController extends Controller
         exit;
     }
     
-    public function remove($id)
+    public function remove()
     {
-        $productId = (int)$id;
+        // Vérifier l'authentification
+        if (!isset($_SESSION['user'])) {
+            $_SESSION['error'] = "Vous devez être connecté pour modifier le panier";
+            header('Location: /login');
+            exit;
+        }
         
+        // Récupérer l'ID depuis GET (pas depuis l'URL paramétrée)
+        $productId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        
+        if ($productId <= 0) {
+            $_SESSION['error'] = "Produit non spécifié";
+            header('Location: /cart');
+            exit;
+        }
+        
+        // Supprimer du panier
         if (isset($_SESSION['cart'][$productId])) {
             unset($_SESSION['cart'][$productId]);
             $_SESSION['success'] = "Produit retiré du panier";

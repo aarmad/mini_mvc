@@ -46,7 +46,7 @@ ob_start();
         <div class="product-card" data-category="<?= $product->getCategoryId() ?>" data-price="<?= $product->getPrice() ?>">
             <div class="product-image">
                 <?php if ($product->getImage()): ?>
-                    <img src="/uploads/<?= htmlspecialchars($product->getImage()) ?>" alt="<?= htmlspecialchars($product->getName()) ?>" loading="lazy">
+                    <img src="/img/<?= htmlspecialchars($product->getImage()) ?>" alt="<?= htmlspecialchars($product->getName()) ?>" loading="lazy">
                 <?php else: ?>
                     <div class="product-image-placeholder">
                         <span>🛒</span>
@@ -88,7 +88,7 @@ ob_start();
                         <button class="btn-disabled" disabled>Rupture de stock</button>
                     <?php endif; ?>
                     
-                    <a href="/product/<?= $product->getId() ?>" class="btn-details">Voir détails</a>
+                    <a href="/product?id=<?= $product->getId() ?>" class="btn-details">Voir détails</a>
                 </div>
             </div>
         </div>
